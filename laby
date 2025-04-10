@@ -1,0 +1,92 @@
+import pygame
+import time 
+
+pygame.init()
+screen = pygame.display.set_mode((1000, 800))
+pygame.display.set_caption("Лабиринт")
+rect_position = pygame.math.Vector2(100, 400)                                       
+size = 10
+font = pygame.font.Font(None, 36)
+font1 = pygame.font.Font(None, 300)
+font2 = pygame.font.Font(None, 120)
+runtime = 0
+run = True
+won = False
+while run:
+    for event in pygame.event.get():
+        keys = pygame.key.get_pressed()
+        old_pos = rect_position.copy()
+        if event.type == pygame.QUIT:
+            run = False
+        if keys[pygame.K_d]:
+            rect_position += pygame.math.Vector2(5, 0) 
+        elif keys[pygame.K_w]:
+            rect_position += pygame.math.Vector2(0, -5) 
+        elif keys[pygame.K_s]:
+            rect_position += pygame.math.Vector2(0, 5) 
+        elif keys[pygame.K_a]:
+            rect_position += pygame.math.Vector2(-5, 0) 
+    screen.fill((255,255,255))
+    player =pygame.draw.rect(screen, (0, 0, 255), (rect_position.x, rect_position.y, size, size))
+    a=pygame.draw.rect(screen, (0, 255, 0), (180,780,400,20), 10) #granica snizu
+    b=pygame.draw.rect(screen, (0, 255, 0), (180,0,20,340), 10) # vhod sverhu
+    c=pygame.draw.rect(screen, (0, 255, 0), (180,445,20,350), 10) #vhod snizu
+    d=pygame.draw.rect(screen, (0, 255, 0), (560,0,20,460), 10)#vihod sverhu
+    d1=pygame.draw.rect(screen, (0, 255, 0), (560,540,20,340), 10)#vihod snizu
+    e=pygame.draw.rect(screen, (0, 255, 0), (200,0,380,20), 10)#granica sverhu
+    f=pygame.draw.rect(screen, (0, 255, 255), (240,80,20,280), 10) #goluboi
+    g=pygame.draw.rect(screen, (255, 255, 0), (240,440,20,300), 10)  #zholti                                               #1=х 2=у 3=ширина 4=высота 5=размер стенок 
+    h=pygame.draw.rect(screen, (0, 0, 0), (240,80,150,20), 10) #chorni sverhu
+    i=pygame.draw.rect(screen,(255, 0,0),(390,80,20,80), 10) #krasni                     
+    j=pygame.draw.rect(screen,(200, 255,255),(320,200,190,20), 10)#steklo
+    k=pygame.draw.rect(screen,(100, 100,100),(450,20,20,200), 10)#seriy
+    l=pygame.draw.rect(screen, (0, 0, 255), (320,140,90,20), 10)#siniy
+    m=pygame.draw.rect(screen,(160, 30,255),(310,140,20,80), 10)#fioletoviy
+    n=pygame.draw.rect(screen,(60, 200,100),(310,280,20,300), 10)#tyomnozeleniy
+    o=pygame.draw.rect(screen,(200, 255,20),(310,260,140,20), 10)#laim sverhu
+    p=pygame.draw.rect(screen,(200, 255,20),(310,580,140,20), 10)#laim snizu
+    q=pygame.draw.rect(screen, (0, 0, 0), (240,720,150,20), 10)#chorni snizu
+    r=pygame.draw.rect(screen,(255, 0,0),(390,660,20,120), 10)#krasniy snizu
+    s=pygame.draw.rect(screen, (0, 0, 255), (300,660,90,20), 10)#siniy snizu
+    t=pygame.draw.rect(screen,(100, 100,100),(450,530,20,250), 10)#seriy snizu
+    u=pygame.draw.rect(screen,(255, 150,253),(500,200,20,260), 10)#rozoviy
+    v=pygame.draw.rect(screen, (0, 0, 255), (380,320,120,20), 10)#siniy zig 1
+    w=pygame.draw.rect(screen, (0, 0, 255), (330,380,120,20), 10)#siniy zig 2
+    x=pygame.draw.rect(screen, (0, 0, 255), (380,440,200,20), 10)#siniy zig 3
+    y=pygame.draw.rect(screen,(246, 164,183),(380,460,20,80), 10)#svino cvet
+    z=pygame.draw.rect(screen, (0, 0, 255), (470,530,110,20), 10)#sini vihod
+    walls = [a, b, c, d, d1, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z]
+    for wall in walls:
+        if player.colliderect(wall):
+            lose = "You lose!"
+            losetext = font1.render(lose, True, (0,0,0))
+            screen.blit(losetext, (50, 50))
+            pygame.display.flip()
+            time.sleep(1)
+            run = False
+
+    runtime +=1
+    time1 =(runtime/1000)
+    timetext = font.render(f"time: {runtime/1000:.0f}", True, (0,0,0))  
+    textik="Лабиринт" 
+    text = font.render(f"{textik}", True, (0, 0, 0))
+    screen.blit(text, (20, 10))
+    screen.blit(timetext, (20,40))
+    if rect_position.x >= 570 and won == False:
+        r4 = float(runtime // 1000)
+        win = f"Congratulation!"
+        win1 = f"You win in only {r4} seconds!"
+        wintext = font.render(win, True, (0,0,0))
+        wintext1 = font.render(win1, True, (0,0,0))
+        won = True
+    if won:
+        screen.blit(wintext1, (600, 450))
+        screen.blit(wintext, (600, 500))
+    if rect_position.x <= 0 or rect_position.x >= 1000 or rect_position.y <= 0 or rect_position.y >= 800:
+        away = "Why did you run away?"
+        awaytext = font2.render(away, True, (0,0,0))
+        screen.blit(awaytext, (50, 300))
+        pygame.display.flip()
+        time.sleep(1)
+        run = False
+    pygame.display.flip()
